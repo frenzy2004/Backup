@@ -2,7 +2,9 @@ services:
   - type: web
     name: bizlocate-backend
     env: python
-    buildCommand: pip install -r dragonfly/requirements.txt
+    region: oregon
+    plan: free
+    buildCommand: cd dragonfly && pip install -r requirements.txt
     startCommand: cd dragonfly && uvicorn unified_api:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: CLIENT_ID
@@ -14,4 +16,4 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       - key: PYTHON_VERSION
-        value: 3.10.0
+        value: "3.11"
