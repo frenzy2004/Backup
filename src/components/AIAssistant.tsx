@@ -28,20 +28,71 @@ const AIAssistant: React.FC<AIAssistantProps> = () => {
     scrollToBottom();
   }, [messages]);
 
-  // New: Call backend API to get Bedrock response
-  const fetchBedrockResponse = async (userMessage: string): Promise<string> => {
+  // Call OpenAI directly from frontend with improved context-aware prompt
+  const fetchAIResponse = async (userMessage: string): Promise<string> => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || '/api/bedrock-chat';
-      const res = await fetch(apiUrl, {
+      const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+
+      if (!apiKey) {
+        return '⚠️ OpenAI API key not configured. Please add VITE_OPENAI_API_KEY to your environment variables.';
+      }
+
+      // Build context string from available data
+      let contextInfo = '';
+
+      if (location) contextInfo += `\n📍 Location: ${location}`;
+      if (businessType) contextInfo += `\n🏢 Business Type: ${businessType}`;
+      if (successScore) contextInfo += `\n📊 Success Score: ${successScore}/100`;
+
+      if (satelliteData?.statistics) {
+        const stats = satelliteData.statistics;
+        contextInfo += `\n\n🛰️ SATELLITE DATA:`;
+        contextInfo += `\n• Change: ${stats.change_percentage?.toFixed(1)}%`;
+        contextInfo += `\n• Pixels Changed: ${stats.changed_pixels?.toLocaleString()}`;
+        contextInfo += `\n• Dates: ${satelliteData.before_date} to ${satelliteData.after_date}`;
+        contextInfo += `\n• Model Confidence: ${(satelliteData.model_info?.confidence * 100)?.toFixed(0)}%`;
+      }
+
+      const systemPrompt = `You are BizLocate AI, an EXPERT location analysis assistant. Give DIRECT, DATA-DRIVEN answers with ZERO uncertainty.
+
+🎯 ANALYSIS RULES:
+**AIR QUALITY:** Change >5% = HIGH construction = POOR air quality. Change <2% = stable = GOOD air quality.
+**PROFITABILITY:** High urban expansion + low competition = HIGH profit potential.
+**HEALTH:** Vegetation increase = BETTER air. Vegetation decrease = WORSE air.
+
+📋 FORMAT: Use emojis (📊 🛰️ 🌿 🏗️ 💰 🫁), bullet points, specific numbers. End with CLEAR verdict.
+
+🚫 NEVER say "consult professionals". ✅ ALWAYS say "Based on the data, here's what you should do..."
+
+${contextInfo ? `\nCURRENT CONTEXT:${contextInfo}` : ''}`;
+
+      const res = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userMessage }
+          ],
+          max_tokens: 800,
+          temperature: 0.7
+        })
       });
-      if (!res.ok) throw new Error('Failed to fetch response');
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error?.message || 'OpenAI API error');
+      }
+
       const data = await res.json();
-      return data.response || 'Sorry, I could not get a response from the AI.';
+      return data.choices[0]?.message?.content || 'Sorry, I could not get a response.';
     } catch (err) {
-      return 'Error contacting AI service.';
+      console.error('AI error:', err);
+      return `⚠️ Error: ${err instanceof Error ? err.message : 'Could not contact AI service'}`;
     }
   };
 
@@ -59,8 +110,8 @@ const AIAssistant: React.FC<AIAssistantProps> = () => {
     setInputValue('');
     setIsTyping(true);
 
-    // Call Bedrock API via backend
-    const aiText = await fetchBedrockResponse(text);
+    // Call OpenAI API directly
+    const aiText = await fetchAIResponse(text);
     const aiResponse: ChatMessage = {
       id: (Date.now() + 1).toString(),
       text: aiText,
