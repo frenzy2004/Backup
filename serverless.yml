@@ -1,0 +1,17 @@
+service: location-analysis-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    NODE_ENV: production
+
+functions:
+  bedrockChat:
+    handler: api/bedrock-chat.handler
+    events:
+      - http:
+          path: /api/bedrock-chat
+          method: post
+          cors: true

@@ -1,0 +1,239 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* EXACT Garuda Lens Dark Theme - from ui-copy/app/globals.css */
+
+    /* Core backgrounds (ultra dark professional) */
+    --background: 0 0% 4%; /* #0a0a0a */
+    --card: 0 0% 7%; /* #111111 */
+    --popover: 0 0% 7%; /* #111111 */
+
+    /* Text colors */
+    --foreground: 0 0% 100%; /* #ffffff */
+    --card-foreground: 0 0% 100%;
+    --popover-foreground: 0 0% 100%;
+
+    /* Primary/Secondary  */
+    --primary: 0 0% 100%; /* white primary */
+    --primary-foreground: 0 0% 0%; /* black text on white */
+    --secondary: 0 0% 10%; /* #1a1a1a */
+    --secondary-foreground: 0 0% 100%;
+
+    /* Muted states */
+    --muted: 0 0% 10%; /* #1a1a1a */
+    --muted-foreground: 0 0% 53%; /* #888888 */
+
+    /* Accent (Garuda yellow) */
+    --accent: 45 98% 55%; /* #f9a825 */
+    --accent-foreground: 0 0% 0%;
+
+    /* States */
+    --destructive: 0 100% 65%; /* #ff4d4d */
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders & inputs */
+    --border: 0 0% 16%; /* #2a2a2a */
+    --input: 0 0% 10%; /* #1a1a1a */
+    --ring: 0 0% 100%;
+
+    /* Chart colors */
+    --chart-1: 45 98% 55%; /* #f9a825 */
+    --chart-2: 122 39% 49%; /* #4caf50 */
+    --chart-3: 207 90% 54%; /* #2196f3 */
+    --chart-4: 36 100% 50%; /* #ff9800 */
+    --chart-5: 291 64% 42%; /* #9c27b0 */
+
+    /* Success/warning for compatibility */
+    --success: 122 39% 49%;
+    --success-hover: 122 39% 59%;
+    --warning: 36 100% 50%;
+  }
+
+  /* Typography baseline */
+  * {
+    @apply antialiased;
+  }
+
+  body {
+    @apply text-foreground bg-background;
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-foreground;
+  }
+  
+  h1 {
+    @apply text-3xl lg:text-4xl;
+  }
+  
+  h2 {
+    @apply text-2xl lg:text-3xl;
+  }
+  
+  h3 {
+    @apply text-xl lg:text-2xl;
+  }
+  
+  h4 {
+    @apply text-lg lg:text-xl;
+  }
+  
+  h5 {
+    @apply text-base lg:text-lg;
+  }
+  
+  h6 {
+    @apply text-sm lg:text-base;
+  }
+}
+
+@layer components {
+  /* Button Base Styles - Dark Theme */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background disabled:opacity-40 disabled:cursor-not-allowed text-sm;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary text-black hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25 focus:ring-primary;
+  }
+
+  .btn-success {
+    @apply btn bg-success text-white hover:bg-success-hover hover:shadow-lg hover:shadow-success/25 focus:ring-success;
+  }
+
+  .btn-destructive {
+    @apply btn bg-destructive text-white hover:bg-destructive-hover hover:shadow-lg hover:shadow-destructive/25 focus:ring-destructive;
+  }
+
+  .btn-secondary {
+    @apply btn bg-muted text-foreground hover:bg-muted/80 border border-border focus:ring-primary;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent hover:bg-muted/50 text-foreground focus:ring-primary;
+  }
+
+  .btn-icon {
+    @apply btn p-2.5;
+  }
+
+  /* Input Field Styles - Dark Theme */
+  .input {
+    @apply w-full px-4 py-3 border border-input-border rounded-lg bg-input-bg text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-input-focus focus:border-transparent transition-all duration-200;
+  }
+
+  .input-with-icon {
+    @apply input pl-11;
+  }
+
+  .select {
+    @apply input appearance-none bg-input-bg cursor-pointer;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-foreground mb-2;
+  }
+
+  .label-required::after {
+    @apply text-destructive ml-1;
+    content: '*';
+  }
+
+  .input-hint {
+    @apply text-sm text-muted-foreground mt-2;
+  }
+
+  /* Card Styles - Dark with Glow */
+  .card {
+    @apply bg-card-bg border border-card-border rounded-xl shadow-lg;
+  }
+
+  .card-elevated {
+    @apply bg-card-elevated border border-card-border rounded-xl shadow-xl;
+  }
+
+  .card-header {
+    @apply p-6 border-b border-card-border;
+  }
+
+  .card-body {
+    @apply p-6;
+  }
+
+  .card-footer {
+    @apply p-6 border-t border-card-border;
+  }
+
+  /* Metric Cards - Large Numbers with Glow */
+  .metric-card {
+    @apply card p-6 space-y-3;
+  }
+
+  .metric-value {
+    @apply text-4xl font-bold text-foreground;
+  }
+
+  .metric-label {
+    @apply text-sm text-muted-foreground uppercase tracking-wide;
+  }
+
+  /* Badge Styles - Dark Theme */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply badge bg-primary/20 text-primary border border-primary/30;
+  }
+
+  .badge-success {
+    @apply badge bg-success/20 text-success border border-success/30;
+  }
+
+  .badge-warning {
+    @apply badge bg-warning/20 text-warning border border-warning/30;
+  }
+
+  .badge-accent {
+    @apply badge bg-accent/20 text-accent border border-accent/30;
+  }
+
+  /* Section Styles */
+  .section-title {
+    @apply text-lg font-semibold text-foreground mb-4 flex items-center gap-2;
+  }
+
+  .section-subtitle {
+    @apply text-sm text-muted-foreground mb-3;
+  }
+
+  /* Loading Skeleton - Dark */
+  .skeleton {
+    @apply bg-muted animate-pulse rounded;
+  }
+
+  /* Solid Text */
+  .gradient-text {
+    @apply text-primary;
+  }
+
+  /* Glow Effect */
+  .glow {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+
+  .glow-pink {
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+  }
+
+  /* Smooth Scroll */
+  * {
+    scroll-behavior: smooth;
+  }
+}

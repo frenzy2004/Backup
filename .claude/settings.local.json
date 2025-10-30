@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Read(//c/Users/DELL/Documents/project8/garuda_lens/components/ui/**)",
+      "Read(//c/Users/DELL/Documents/project8/garuda_lens/lib/**)",
+      "Read(//c/Users/DELL/Documents/project8/garuda_lens/components/**)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "shadcn"
+  ]
+}
